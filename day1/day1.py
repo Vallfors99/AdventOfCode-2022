@@ -1,5 +1,5 @@
 # input parsing
-input_file = 'input.txt'
+input_file = 'day1\input.txt'
 with open(input_file) as infile:
     lines = [line.strip('\n') for line in infile]
 

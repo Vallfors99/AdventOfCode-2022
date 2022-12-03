@@ -4,10 +4,6 @@ with open(input_file) as infile:
     rounds = [play.split(' ') for play in rounds]
 
 
-# play games
-# X = Rock, Y = Paper, Z = Scissors
-# A = Rock, B  = Paper, C = Scissors
-
 value_of_play = {'A': 1, 'B':2, 'C':3, 'X':1, 'Y':2,'Z':3}
 wins_player = [['A','Y'],['B','Z'],['C','X']]
 opponent_scores = []
@@ -44,9 +40,3 @@ for round in rounds:
         score_round = 6
     score_total += score_round + value_of_play[player_play]
 print(score_total)
-
-# part 1 ideas
-possible_moves = ['A','B','C']
-loosing_move_by_opponent_move = {possible_moves[i]: possible_moves[(i+1) % 2] for i in len(possible_moves)}
-winning_move_by_opponent_move = {possible_moves[i]: possible_moves[(i-1) % 2] for i in len(possible_moves)}
-points_by_move = {'A':1, 'B':2,'C':3}

@@ -45,7 +45,7 @@ for round in rounds:
     score_total += score_round + value_of_play[player_play]
 print(score_total)
 
-# part 1 again
+# part 1 ideas
 possible_moves = ['A','B','C']
 loosing_move_by_opponent_move = {possible_moves[i]: possible_moves[(i+1) % 2] for i in len(possible_moves)}
 winning_move_by_opponent_move = {possible_moves[i]: possible_moves[(i-1) % 2] for i in len(possible_moves)}

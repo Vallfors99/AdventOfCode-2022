@@ -11,13 +11,8 @@ alphabet = list(string.ascii_lowercase) + list(string.ascii_uppercase)
 value_by_letter = {alphabet[i]:i+1 for i in range(len(alphabet))}
 
 # split rugsacks into groups of three
-groups = []
-group = []
-for i in range(len(rugsacks)):
-    group.append(rugsacks[i])
-    if len(group) == 3:
-        groups.append(group)
-        group = []
+n = 3
+groups = [rugsacks[i * n:(i + 1) * n] for i in range((len(rugsacks) + n - 1) // n )]
 
 # calculate total priority
 total_priority = 0

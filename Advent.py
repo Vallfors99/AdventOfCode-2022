@@ -1,5 +1,6 @@
 # group lines into chunks / sublists
 from itertools import groupby
+
 def create_chunks_by_separator(list_of_lines,sep=''):
     '''
     create chunks from a list of lines by separator

@@ -44,7 +44,6 @@ with open(input_file) as infile:
 dir_vectors = {"U":(0,1),"D":(0,-1),"L":(-1,0),"R":(1,0)}
 current_positions = {"head":(0,0),"tail":(0,0)}
 visited_positions_tail = [(0,0)]
-
 grid_shape = get_grid_size(lines)
 
 

@@ -1,7 +1,8 @@
-input_file = "input.txt"
+input_file = "day10\input.txt"
 with open(input_file) as infile:
     lines = [line.strip() for line in infile]
 lines = [l.split(' ') for l in lines]
+
 register_val = [1]
 for command_val in lines:
     if len(command_val) ==1 and command_val[0] == "noop": #1 cycle, no change in register val

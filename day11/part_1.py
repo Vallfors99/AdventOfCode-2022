@@ -39,6 +39,7 @@ def play_round(monkeys,items_inspected):
                 destination = monkey["destination_true"]
             else:
                 destination = monkey["destination_false"]
+                
             # throw to destination monkey
             monkeys[destination]['items'].append(worry_level)
         
@@ -73,6 +74,7 @@ print("stop")
 items_inspected = {}
 for round_id in range(20):
     monkeys,items_inspected = play_round(monkeys,items_inspected)
+
 print(items_inspected)
 items_inspected = {k: v for k, v in sorted(items_inspected.items(),reverse=True, key=lambda item: item[1])}
 ids_sorted = list(items_inspected.keys())

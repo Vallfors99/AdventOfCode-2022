@@ -1,5 +1,5 @@
 import numpy as np
-with open("input.txt") as infile:
+with open("day8\input.txt") as infile:
     lines = [[int(elem) for elem in line.strip()] for line in infile]
 
 grid = np.array(lines)

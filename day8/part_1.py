@@ -4,9 +4,7 @@ with open("day8\input.txt") as infile:
 
 grid = np.array(lines)
 grid_visible = np.empty(np.shape(grid),dtype=str)
-print(grid)
 trees_outside = []
-print(len(grid))
 border_count = 0
 for row in range(len(grid)):
     for col in range(len(grid[0])):
@@ -17,7 +15,6 @@ for row in range(len(grid)):
             trees_outside.append((row,col))
             grid_visible[row,col] = str(tree_height)
             border_count += 1
-            print(f'Border! {border_count}, {(row,col)}')
 
         else:
             # check if visible
@@ -30,5 +27,5 @@ for row in range(len(grid)):
                 trees_outside.append((row,col))
                 grid_visible[row,col] = str(tree_height)
             
-print(len(trees_outside))
 print(grid_visible)
+print(len(trees_outside))

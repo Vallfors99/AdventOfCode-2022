@@ -1,7 +1,4 @@
 import numpy as np
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 
 def get_new_tail_position(pos_head,pos_tail):
     Dx,Dy = (pos_head[0]-pos_tail[0],pos_head[1]-pos_tail[1])
@@ -41,7 +38,7 @@ def get_grid_size(lines):
     return grid_size
 
 
-input_file = "input.txt"
+input_file = "day9\input.txt"
 with open(input_file) as infile:
     lines = [line.strip().split(' ') for line in infile]
 
@@ -72,18 +69,4 @@ for direction,steps in lines:
                 visited_positions_tail.append(new_position_tail)
             
             current_positions["tail"][tail_idx] = new_position_tail
-
-        
-        grid_for_print = np.empty(grid_shape,dtype=str)
-        # add each tail position to the grid, using the indices of the tail position
-        for idx,tail_position in enumerate(current_positions["tail"]):
-            grid_for_print[tail_position] = str(idx)
-        grid_for_print[current_positions["head"]] = 'H'
-        grids_for_print.append(grid_for_print)
-        
-        # print grid in a nice way
-        for row in grid_for_print:
-            print(' '.join(row))
-        print(" ")
-        
 print(len(set(visited_positions_tail)))

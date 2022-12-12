@@ -37,7 +37,7 @@ def get_grid_size(lines):
     return grid_size
 
 
-input_file = "input.txt"
+input_file = "day9\input.txt"
 with open(input_file) as infile:
     lines = [line.strip().split(' ') for line in infile]
 

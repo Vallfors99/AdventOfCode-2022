@@ -1,9 +1,8 @@
 import numpy as np
-with open("input.txt") as infile:
+with open("day8\input.txt") as infile:
     lines = [[int(elem) for elem in line.strip()] for line in infile]
 grid = np.array(lines)
 visibility_grid = np.zeros(grid.shape)
-print(grid)
 
 visibility_scores = {}
 for row in range(len(grid)):
@@ -31,5 +30,5 @@ for row in range(len(grid)):
         visibility_score = direction_scores[0]*direction_scores[1]*direction_scores[2]*direction_scores[3]
         visibility_scores[(row,col)] = visibility_score
         visibility_grid[row,col] = visibility_score
-print(max(visibility_scores.values()))
 print(visibility_grid)
+print(max(visibility_scores.values()))

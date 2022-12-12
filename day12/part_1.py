@@ -1,7 +1,6 @@
 import string
 import numpy as np
 
-
 # input parsing
 input_file = 'day12\input.txt'
 with open(input_file) as infile:
@@ -20,9 +19,8 @@ for row_idx in range(len(lines)):
 
 start_key = [i for i in grid if grid[i]==-1][0]
 stop_key = [i for i in grid if grid[i]==26][0]
-print(grid)
-print(start_key)
-print(stop_key)
+grid[start_key] = 0 
+grid[stop_key] = 25
 
 # generate all possible paths
 paths = []
@@ -31,7 +29,6 @@ all_directions = [(1,0),(-1,0),(0,1),(0,-1)]
 # figure out where we can go
 current_pos = start_key
 
-i = 0
 paths = [[start_key]]
 complete_paths = []
 visited_positions = {}
@@ -40,7 +37,6 @@ while complete_paths == []:
     # where can i go?
     new_paths = []
     visited_positions_this_round = []
-    #print(i)
     for path in paths:
         current_pos = path[-1]
         max_climb_height = grid[current_pos] + 1
@@ -60,13 +56,12 @@ while complete_paths == []:
             if new_pos in visited_positions:
                 continue
 
-            elif not grid[new_pos] == 26:
+            elif new_pos != stop_key:
                 new_paths.append(path+[new_pos])
                 visited_positions_this_round.append(new_pos)
 
             else: # complete path; save
                 complete_paths.append(path+[new_pos])
-                #visited_positions_this_round.append(new_pos)
 
         for pos in visited_positions_this_round:
             visited_positions[pos] = True
@@ -75,9 +70,6 @@ while complete_paths == []:
     i+=1
 
 print(len(complete_paths[0])-1)
-#for coords in complete_paths[0]:
-   # print(f'{coords} {grid[coords]}')
-
 grid_height = len(lines)
 grid_width = len(lines[0])
 print_grid = np.full(fill_value='.',shape=[grid_height,grid_width],dtype=str)
@@ -93,5 +85,4 @@ for i in range(len(complete_paths[0])-1):
     else:
         s = ">"
     print_grid[complete_paths[0][i]] = s
-
-#print(print_grid)
+print(print_grid)

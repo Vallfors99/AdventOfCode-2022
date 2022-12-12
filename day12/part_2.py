@@ -9,7 +9,7 @@ with open(input_file) as infile:
 
 letters = list(string.ascii_lowercase)
 val_by_letter = {letters[i]:i for i in range(len(letters))}
-val_by_letter['S'] = -1
+val_by_letter['S'] = 0
 val_by_letter['E'] = 26
 
 grid = {}
@@ -18,36 +18,28 @@ for row_idx in range(len(lines)):
     for col_idx in range(len(lines[0])):
         grid[(row_idx,col_idx)] = val_by_letter[lines[row_idx][col_idx]]
 
-start_key = [i for i in grid if grid[i]==-1][0]
+start_keys = [i for i in grid if grid[i]==0]
 stop_key = [i for i in grid if grid[i]==26][0]
-print(grid)
-print(start_key)
-print(stop_key)
+grid[stop_key] = 25
 
 # generate all possible paths
 paths = []
 path = []
 all_directions = [(1,0),(-1,0),(0,1),(0,-1)]
-starting_positions = [i for i in grid if grid[i]==-1 or grid[i]==0]
 complete_paths_all = []
-for start_key in starting_positions:
+for idx,start_key in enumerate(start_keys):
     paths = [[start_key]]
     complete_paths = []
     visited_positions = {}
     i = 0
+    print(f'Start key {idx}/{len(start_keys)}')
     while paths != [] and complete_paths == []:
         # where can i go?
         new_paths = []
         visited_positions_this_round = []
-        #print(i)
         for path in paths:
             current_pos = path[-1]
             max_climb_height = grid[current_pos] + 1
-            if current_pos == start_key:
-                max_climb_height+=1
-            elif max_climb_height == 25:
-                max_climb_height+=1
-            
             possible_moves = [(path[-1][0]+Drow,path[-1][1]+Dcol) for (Drow,Dcol) in all_directions if (path[-1][0]+Drow,path[-1][1]+Dcol) in grid and grid[(path[-1][0]+Drow,path[-1][1]+Dcol)] <= max_climb_height ]
             
             
@@ -59,7 +51,7 @@ for start_key in starting_positions:
                 if new_pos in visited_positions:
                     continue
 
-                elif not grid[new_pos] == 26:
+                elif not new_pos == stop_key:
                     new_paths.append(path+[new_pos])
                     visited_positions_this_round.append(new_pos)
 
@@ -67,7 +59,6 @@ for start_key in starting_positions:
                     complete_paths.append(path+[new_pos])
                     complete_paths_all.append(len(path+[new_pos]))
                     visited_positions_this_round.append(new_pos)
-                    break
 
             for pos in visited_positions_this_round:
                 visited_positions[pos] = True

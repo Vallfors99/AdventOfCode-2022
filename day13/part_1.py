@@ -7,42 +7,33 @@ def create_chunks_by_separator(list_of_lines,sep=''):
     chunks = [elem for elem in (list(g) for k,g in groupby(list_of_lines, key=lambda x: x != sep) if k)]
     return chunks
 
-def check_order(pair_left,pair_right,idx):
-    
-    print(pair_left,pair_right)
-    if idx > len(pair_right)-1 and not idx > len(pair_left)-1:
-        return False
-    elif idx > len(pair_left)-1:
-        return True
-
-    if isinstance(pair_left[idx],list) and isinstance(pair_right[idx],list):
-        idx+=1
-        if idx > len(pair_right)-1 and not idx > len(pair_left)-1:
-            return False
-        elif idx > len(pair_left)-1:
+def check_order(pair_left,pair_right):
+    # get both into lists
+    print(f'{pair_left}, {pair_right}')
+    if isinstance(pair_left,int) and isinstance(pair_right,int):
+        if pair_left < pair_right:
             return True
-        check_order(pair_left[idx],pair_right[idx],idx)
-
-    elif isinstance(pair_left[idx],list) or isinstance(pair_right[idx],list):
-        if isinstance(pair_left[idx],int):
-            pair_left[idx] = list(pair_left[idx])
-        
-        if isinstance(pair_left[idx],int):
-            pair_right[idx] = list(pair_right[idx])
-        return check_order(pair_left,pair_right,idx)
-
-    else: # two ints
-        if pair_left[idx] < pair_right[idx]:
-            return True
-        elif pair_left[idx] > pair_right[idx]:
-            return False
+        elif pair_left == pair_right:
+            return None
         else:
-            idx +=1
-            if idx > len(pair_right)-1 and not idx > len(pair_left)-1:
-                return False
-            elif idx > len(pair_left)-1:
-                return True
-            return check_order(pair_left,pair_right,idx)
+            return False
+    if not isinstance(pair_left,list):
+        pair_left = [pair_left]
+    if not isinstance(pair_right,list):
+        pair_right = [pair_right]
+    # compare
+
+    for idx in range(len(pair_left)):
+        if idx > len(pair_right)-1:
+            outcome = False
+            return False
+        outcome = check_order(pair_left[idx],pair_right[idx])
+        if outcome == False:
+            return False
+        if outcome == True:
+            return True
+    return True
+
 
 
 # input parsing
@@ -67,5 +58,6 @@ for idx in range(len(pairs)):
 
 pair_results = []
 for pair in pairs_dict.values():
-    pair_results.append(check_order([pair[0]],[pair[1]],idx=0))
-print(sum([i for i in range(len(pair_results)) if pair_results[i]]))
+    pair_results.append(check_order(pair[0],pair[1]))
+print(pair_results)
+print(sum([idx+1 for idx in range(len(pair_results)) if pair_results[idx]]))

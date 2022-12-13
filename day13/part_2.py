@@ -9,15 +9,15 @@ def create_chunks_by_separator(list_of_lines,sep=''):
 
 def check_order(pair_left,pair_right):
     # get both into lists
-    print(f'{pair_left}, {pair_right}')
+    #print(f'{pair_left}, {pair_right}')
     if isinstance(pair_left,int) and isinstance(pair_right,int):
         if pair_left < pair_right:
-            print('Left side is smaller, so inputs are in the right order')
+            #print('Left side is smaller, so inputs are in the right order')
             return True
         elif pair_left == pair_right:
             return None
         else:
-            print('Right side is smaller, so inputs are not in the right order')
+            #print('Right side is smaller, so inputs are not in the right order')
             return False
     if not isinstance(pair_left,list):
         pair_left = [pair_left]
@@ -26,7 +26,7 @@ def check_order(pair_left,pair_right):
 
     for idx in range(len(pair_left)):
         if idx > len(pair_right)-1:
-            print('Right side ran out of items, so inputs are not in the right order')
+            #print('Right side ran out of items, so inputs are not in the right order')
             return False
         outcome = check_order(pair_left[idx],pair_right[idx])
         if outcome == False:
@@ -35,7 +35,7 @@ def check_order(pair_left,pair_right):
             return True
 
     if len(pair_left) < len(pair_right):
-        print('Left side ran out of items, so inputs are in the right order')
+        #print('Left side ran out of items, so inputs are in the right order')
         return True
     else:
         return None
@@ -51,10 +51,19 @@ with open(input_file) as infile:
 
 # build list of packets
 packets = []
-for idx in range(lines):
+for idx in range(len(lines)):
     str_to_execute_1 = f'packets.append({lines[idx]})'
     exec(str_to_execute_1)
 
 
-for packet in packets:
-    #sort
+# compare to all and get scores, most smaller
+total_score = {}
+for i in range(len(packets)):
+    print(i)
+    total_score[i] = 0
+    for j in range(len(packets)):
+        if j != i:
+            if not check_order(packets[i],packets[j]):
+                total_score[i]+=1
+
+print(total_score)

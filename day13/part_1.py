@@ -12,27 +12,33 @@ def check_order(pair_left,pair_right):
     print(f'{pair_left}, {pair_right}')
     if isinstance(pair_left,int) and isinstance(pair_right,int):
         if pair_left < pair_right:
+            print('Left side is smaller, so inputs are in the right order')
             return True
         elif pair_left == pair_right:
             return None
         else:
+            print('Right side is smaller, so inputs are not in the right order')
             return False
     if not isinstance(pair_left,list):
         pair_left = [pair_left]
     if not isinstance(pair_right,list):
         pair_right = [pair_right]
-    # compare
 
     for idx in range(len(pair_left)):
         if idx > len(pair_right)-1:
-            outcome = False
+            print('Right side ran out of items, so inputs are not in the right order')
             return False
         outcome = check_order(pair_left[idx],pair_right[idx])
         if outcome == False:
             return False
         if outcome == True:
             return True
-    return True
+
+    if len(pair_left) < len(pair_right):
+        print('Left side ran out of items, so inputs are in the right order')
+        return True
+    else:
+        return None
 
 
 

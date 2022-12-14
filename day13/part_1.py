@@ -8,8 +8,9 @@ def create_chunks_by_separator(list_of_lines,sep=''):
     return chunks
 
 def check_order(pair_left,pair_right):
-    # get both into lists
     print(f'{pair_left}, {pair_right}')
+
+    # check if both are integers
     if isinstance(pair_left,int) and isinstance(pair_right,int):
         if pair_left < pair_right:
             print('Left side is smaller, so inputs are in the right order')

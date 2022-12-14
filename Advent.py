@@ -15,37 +15,19 @@ def create_chunks_by_count(list_of_lines,n:int):
     chunks = [list_of_lines[i * n:(i + 1) * n] for i in range((len(list_of_lines) + n - 1) // n )]
     return chunks
 
-def get_points_between(x1y1,x2y2,inclusive=True,excludeDiagonal=False):
-    '''
-    get all points between two points provided as tuples
-    '''
-    dx,dy = x1y1[0] - x2y2[0], x1y1[1] - x2y2[1]
-    is_diagonal = abs(dx) == abs(dy) and abs(dx) != 0
-    sgn_x = -1 if dx < 0 else 1
-    sgn_y = -1 if dy < 0 else 1
-
-    if not is_diagonal:
-        if dx != 0 and dy == 0:
-            points_between = [(x1y1[0]+i,x1y1[1]) for i in range(0,dx+sgn_x,sgn_x)]
-
-        elif dy != 0 and dx == 0:
-            points_between = [(x1y1[0],x1y1[1]+i) for i in range(0,dy+sgn_y,sgn_y)]
-
-        else: #same point twice or non-45-degree diagonal
-            points_between = [x1y1]
-            if x1y1 != x2y2:
-                points_between += x2y2
-
-    elif excludeDiagonal == False:
-        points_between = [(x1y1[0]+i*sgn_x,x1y1[1]+i*sgn_y) for i in range(abs(dy)+1)]
-
-    else: 
-        points_between = []
-    
+def get_points_between(x1y1,x2y2,inclusive=True):
+    '''Get all points between two points that are in the same row and/or in the same column'''
+    dx,dy = x2y2[0] - x1y1[0], x2y2[1] - x1y1[1]
+    points_between = [x1y1]
+    step_size_x = 0 if dx == 0 else dx//abs(dx)
+    step_size_y = 0 if dy == 0 else dy//abs(dy)
+    if min(abs(dx),abs(dy)) > 0:
+        raise ValueError('input positions must be either horizontally or vertically aligned, or in the same position')
+    i = 1
+    while not x2y2 in points_between:
+        points_between.append([x1y1[0]+step_size_x*i,x1y1[1]+step_size_y*i])
+        i+=1
     if not inclusive:
         points_between.remove(x1y1)
-        if x2y2 in points_between:
-            points_between.remove(x2y2)
+        points_between.remove(x2y2)
     return points_between
-
-print(get_points_between((-1,-2),(3,3)))

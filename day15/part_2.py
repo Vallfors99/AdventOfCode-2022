@@ -79,6 +79,7 @@ valid_candidates = list(set(valid_candidates))
 beacon_coords = set(list(sensor_data.values()))
 
 # check each intersection
+print(len(valid_candidates))
 for candidate in valid_candidates:
     is_valid = True
     for sensor_pos,beacon_pos in sensor_data.items():

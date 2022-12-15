@@ -1,11 +1,13 @@
 import numpy as np
 def get_points_within_manhattan_distance(sensor_pos,manhattan_distance):
+    print(sensor_pos)
     all_points = []
+    row_to_check = 2000000
+    Dy = row_to_check - sensor_pos[1]
     for Dx in range(-manhattan_distance,manhattan_distance+1,1):
-        for Dy in range(-manhattan_distance,manhattan_distance+1,1):
-            if abs(Dx)+abs(Dy) <= manhattan_distance:
-                all_points.append((sensor_pos[0]+Dx,sensor_pos[1]+Dy))
-
+        if abs(Dx)+abs(Dy) <= manhattan_distance:
+            all_points.append((sensor_pos[0]+Dx,sensor_pos[1]+Dy))
+    
 
     return all_points
 # input parsing

@@ -55,12 +55,7 @@ with open(input_file) as infile:
         plt.plot(x,y)
 
 
-
-# we know that either, we are in a corner and it is enough to have only one border close to us
-# or, if we are not in a corner, there needs to be an intersection or two outer borders
-
-
-# plot good region
+# plot desired region
 plt.axis([0,max_coord,0,max_coord])
 plt.grid(visible=True)
 #plt.show()
@@ -68,7 +63,7 @@ plt.grid(visible=True)
 # initialize list of valid candidates. Corners must be checked.
 valid_candidates = [(0,max_coord),(0,0),(max_coord,0),(max_coord,max_coord)]
 
-# get all line intersections
+# get all line intersections. The valid candidates are either corners or intersections of the perimeter of the border
 for i in range(len(lines_down_all)):
     for j in range(len(lines_up_all)):
         x1,y1,x2,y2 = lines_down_all[i]

@@ -1,23 +1,22 @@
 import numpy as np
-def get_points_within_manhattan_distance(sensor_pos,manhattan_distance,max_coord):
-    print(sensor_pos)
-    all_points = []
-    
-    for x in range(0,max_coord+1):
-        for y in range(0,max_coord+1):
-            Dx = x-sensor_pos[0]
-            Dy = y-sensor_pos[1]
-            if abs(Dx)+abs(Dy) <= manhattan_distance:
-                all_points.append((x,y))
-        
+import matplotlib.pyplot as plt
+def get_all_corners(sensor_pos,beacon_pos):
+    Dx,Dy = beacon_pos[0]-sensor_pos[0], beacon_pos[1]-sensor_pos[1]
+    manhattan_distance = abs(Dx)+abs(Dy)
+    corner_left = (sensor_pos[0]-manhattan_distance,sensor_pos[1])
+    corner_right = (sensor_pos[0]+manhattan_distance,sensor_pos[1])
+    corner_up = (sensor_pos[0],sensor_pos[1]-manhattan_distance)
+    corner_down = (sensor_pos[0],sensor_pos[1]+manhattan_distance)
+    corner_coordinates =[corner_left,corner_down,corner_right,corner_up,corner_left]
+    # dont forget other stuff that could cause problems
+    return corner_coordinates
 
-    return all_points
 # input parsing
 input_file = 'day15\input.txt'
 
 sensor_data = {}
-empty_points = []
-max_coord = 4000000
+candidate_points = []
+max_coord = 20
 
 with open(input_file) as infile:
     lines = [line.strip().split(':') for line in infile]
@@ -30,24 +29,15 @@ with open(input_file) as infile:
 
         # store closest beacon in sensor data
         sensor_data[tuple(lines[i][0])] = tuple(lines[i][1])
-        # calculate manhattan distance
         sensor_pos = lines[i][0]
         beacon_pos = lines[i][1]
-        Dx,Dy = beacon_pos[0]-sensor_pos[0], beacon_pos[1]-sensor_pos[1]
-        manhattan_distance = abs(Dx)+abs(Dy)
-        # get all points closer than the beacon
-        points_closer_than_beacon = get_points_within_manhattan_distance(sensor_pos,manhattan_distance,max_coord)
-        for point in points_closer_than_beacon:
-            empty_points.append(tuple(point))
+        # get all extended lines
+        sensor_corners = get_all_corners(sensor_pos,beacon_pos)
+        print(sensor_corners)
 
-
-empty_points = list(set(empty_points))
-beacons = [pos for pos in sensor_data.values()]
-sensors = [pos for pos in sensor_data.keys()]
-empties= [pos for pos in empty_points]
-occupied= set(empties + sensors + beacons)
-
-for x in range(0,max_coord+1):
-    for y in range(0,max_coord+1):
-        if (x,y) not in occupied:
-            print(x,y)
+# we know that either, we are in a corner and it is enough to have only one border close to us
+# or, if we are not in a corner, there needs to be an intersection or two outer borders
+x = [e[0] for e in sensor_corners]
+y = [e[1] for e in sensor_corners]
+plt.plot(x,y)
+plt.show()

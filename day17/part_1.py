@@ -26,7 +26,7 @@ def drop_rock(grid,rocks_queue:collections.deque,jet_stream_queue: collections.d
         for i in range(len(rock_positions)):
             new_pos = rock_positions[i]
             new_pos[1] += jet_dir
-            if new_pos[1] == 7 or new_pos[1] == -1 or grid[new_pos[0]][new_pos[1]] == '#':
+            if new_pos[1] == 7 or new_pos[1] == -1 or (new_pos[0] < len(grid) and grid[new_pos[0]][new_pos[1]] == '#'):
                 # no jet push, restore old positions and break
                 rock_positions = copy.deepcopy(old_rock_positions)
                 break
@@ -43,7 +43,7 @@ def drop_rock(grid,rocks_queue:collections.deque,jet_stream_queue: collections.d
         for i in range(len(rock_positions)):
             new_pos = rock_positions[i]
             new_pos[0] -= 1
-            if grid[new_pos[0]][new_pos[1]] == "#" or grid[new_pos[0]][new_pos[1]] == '-':
+            if (new_pos[0] < len(grid) and grid[new_pos[0]][new_pos[1]] == '-') or (new_pos[0] < len(grid) and grid[new_pos[0]][new_pos[1]] == "#"):
                 # no fall, rock has landed and the fall should be cancelled
                 rock_positions = copy.deepcopy(old_rock_positions)
                 has_landed = True
@@ -72,14 +72,15 @@ shape_3 = [['.','.','.','.','#','.','.'], ['.','.','.','.','#','.','.'], ['.','.
 shape_4 = [['.','.','#','.','.','.','.'],['.','.','#','.','.','.','.'],['.','.','#','.','.','.','.'],['.','.','#','.','.','.','.']]
 shape_5 = [['.','.','#','#','.','.','.'],['.','.','#','#','.','.','.']]
 
-rock_shapes = [shape_1,shape_2,shape_3,shape_4,shape_5]
+rock_shapes = [shape_1,shape_2,shape_3[::-1],shape_4,shape_5]
+
 rock_shapes_coords = []
 for rock_shape in rock_shapes:
     coords_rocks = []
     for row_idx in range(len(rock_shape)):
         for col_idx in range(len(rock_shape[row_idx])):
             if rock_shape[row_idx][col_idx] == "#":
-                coords_rocks.append([row_idx,col_idx])
+                coords_rocks.append([-row_idx,col_idx])
     rock_shapes_coords.append(coords_rocks)
 rocks_queue = collections.deque(rock_shapes_coords)
 
@@ -89,9 +90,18 @@ for i in range(3):
     grid.append(['.','.','.','.','.','.','.'])
 
 # define loop for rocks falling
-for iter in range(10):
+for iter in range(2022):
     grid,rocks_queue,jet_stream_queue = drop_rock(grid,rocks_queue,jet_stream_queue)
+    '''
     print('')
     print('')
     for row_idx in reversed(range(len(grid))):
         print("".join(grid[row_idx]))
+    '''
+stack_height = len(grid)-1
+for row in grid:
+    if '#' not in row:
+        stack_height -=1
+    else:
+        break
+print(stack_height)

@@ -1,45 +1,32 @@
-from treelib import Node, Tree
+# imports:
+from itertools import groupby
+import collections
 
-class Valve:
-    def __init__(self, name,flow_rate, neighbors):
-        self.name = name
-        self.flow_rate = flow_rate
-        self.neighbors = neighbors
-        self.is_open = False
-    def add_neighbor(self,neighbor):
-        self.neighbors += [neighbor]
-        return None
-    def open_valve(self):
-        self.is_open = True
+# functions:
+def create_chunks_by_separator(list_of_lines,sep=''):
+    '''
+    create chunks from a list of lines by separator
+    '''
+    chunks = [elem for elem in (list(g) for k,g in groupby(list_of_lines, key=lambda x: x != sep) if k)]
+    return chunks
 
-# input parsing
+# input parsing:
 input_file = 'day17\input.txt'
 with open(input_file) as infile:
-    lines = [line.strip() for line in infile]
+    # extract the jet pattern as a list of strings
+    jet_stream_queue = collections.deque([[elem for elem in line.strip()] for line in infile][0])
 
-tree = Tree()
-valves = {}
-lines = [line.replace('Valve ','').replace(' has flow rate=',',').split(';') for line in lines]
-lines = [[line[0].split(','),line[1].split(',')] for line in lines]
-for idx in range(len(lines)):
-    lines[idx][1][0] = lines[idx][1][0].split(' ')[5]
-    name = lines[idx][0][0]
-    flow_rate = int(lines[idx][0][1])
-    neighbors = [elem.replace(' ','') for elem in lines[idx][1] if len(elem) == 2]
-    valves[name] = Valve(name,flow_rate,neighbors)
-    tree.create_node("name",)
-# replace valve neighbors with the real valves
-for name in valves:
-    valves[name].neighbors = [valves[neighbor_name] for neighbor_name in valves[name].neighbors]
-print(valves)
+# define rock shapes and store in a deque
+shape_1 = [['#','#','#','#']]
+shape_2 = [['.','#','.'], ['#','#','#'], ['.','#','.']]
+shape_3 = [['.','.','#'], ['.','.','#'], ['#','#','#']]
+shape_4 = [['#'],['#'],['#'],['#']]
+shape_5 = [['#','#'],['#','#']]
+rocks_queue = collections.deque([shape_1,shape_2,shape_3,shape_4,shape_5])
 
+#define initial grid
+grid = [['.' for col in range(7)] for row in range(4)]
+grid[0] = ['-' for col in range(7)]
 
-
-
-tree.create_node("Harry", "harry")  # No parent means its the root node
-tree.create_node("Jane",  "jane"   , parent="harry")
-tree.create_node("Bill",  "bill"   , parent="harry")
-tree.create_node("Diane", "diane"  , parent="jane")
-tree.create_node("Mary",  "mary"   , parent="diane")
-tree.create_node("Mark",  "mark"   , parent="jane")
-tree.show()
+for row_idx in reversed(range(len(grid))):
+    print("".join(grid[row_idx]))

@@ -91,25 +91,24 @@ for i in range(3):
 
 # define loop for rocks falling
 start_rocks = copy.deepcopy(rocks_queue)
-start_jets = copy.deepcopy(jet_stream_queue)
+start_jets_2 = copy.deepcopy(jet_stream_queue.rotate(-2))
+stack_heights = []
+stack_height_old = 0
 jet_rotation = 0
-for iter in range(1000000000000):
+for iter in range(1000000):
+
+    
+    if (jet_rotation+6)%len(jet_stream_queue) == 0:
+        #print(jet_stream_queue)
+        print(rocks_queue[0])
+        stack_height = len(grid)-1
+        for row in grid:
+            if '#' not in row:
+                stack_height -=1
+            else:
+                break
+        print(f'{stack_height-stack_height_old}, {iter}')
+        stack_height_old = stack_height
     grid,rocks_queue,jet_stream_queue,jet_rotation = drop_rock(grid,rocks_queue,jet_stream_queue,jet_rotation)
 
-    if jet_rotation % len(start_jets) == 0:
-        print(jet_stream_queue)
-    else:
-        print(jet_rotation % len(start_jets))
-    '''
-    print('')
-    print('')
-    for row_idx in reversed(range(len(grid))):
-        print("".join(grid[row_idx]))
-    '''
-stack_height = len(grid)-1
-for row in grid:
-    if '#' not in row:
-        stack_height -=1
-    else:
-        break
-print(stack_height)
+

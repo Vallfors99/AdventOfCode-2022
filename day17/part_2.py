@@ -3,6 +3,12 @@ from itertools import groupby
 import collections
 import copy
 # functions:
+def print_grid(grid):
+    print(" ")
+    for row_idx in reversed(range(len(grid))):
+                        print("".join(grid[row_idx]))
+    print(" ")
+
 def drop_rock(grid,rocks_queue:collections.deque,jet_stream_queue: collections.deque,jet_rotation):
     '''drop a single rock into the grid'''
     has_landed = False
@@ -93,22 +99,65 @@ for i in range(3):
 start_rocks = copy.deepcopy(rocks_queue)
 start_jets_2 = copy.deepcopy(jet_stream_queue.rotate(-2))
 stack_heights = []
-stack_height_old = 0
+stack_heights_old = {}
+delta_old = {}
+iters_old = {}
+extra_stack_height = 0
 jet_rotation = 0
-for iter in range(1000000):
+max_iters = 1000000000000
+iter = 0
+have_skipped = False
+while iter < max_iters:
 
-    
-    if (jet_rotation+6)%len(jet_stream_queue) == 0:
-        #print(jet_stream_queue)
-        print(rocks_queue[0])
-        stack_height = len(grid)-1
-        for row in grid:
-            if '#' not in row:
-                stack_height -=1
+    # check if any repeats
+    if not have_skipped:
+        for n in [4]:
+            has_printed_blank = False
+            if (jet_rotation+n)%len(jet_stream_queue) == 0:
+                #print_grid(grid)
+                if not has_printed_blank:
+                    print(' ')
+                    has_printed_blank = True
+                if n not in stack_heights_old:
+                    stack_heights_old[n] = 0
+                if not n in iters_old:
+                    iters_old[n] = iter
+                if not n in delta_old:
+                    delta_old[n] = 0
+
+                stack_height = 0
+                for row in grid:
+                    if '#' in row:
+                        stack_height +=1
+                
+                print(f'stack height: {stack_height}')
+                print(f'n: {n} | {stack_height-stack_heights_old[n]}, {iter-iters_old[n]},{rocks_queue[0]}')
+                delta_new = stack_height-stack_heights_old[n] 
+                if delta_new == delta_old[n] and delta_new > 0: # safe to start block skipping
+                    delta_iters = iter - iters_old[n]
+                    n_skips = (max_iters-iter)//delta_iters
+                    iter = iter+n_skips*delta_iters
+                    extra_stack_height += n_skips*delta_new
+                    print(f'skipping: new iter = {iter}, extra stack height = {extra_stack_height}')
+                    have_skipped = True
+                    print_grid(grid)
+                else:
+                    iters_old[n] = iter
+                    delta_old[n] = delta_new
+                    stack_heights_old[n] = stack_height
+                    iter+=1
+                    print(iter)
             else:
-                break
-        print(f'{stack_height-stack_height_old}, {iter}')
-        stack_height_old = stack_height
+                iter +=1
+                print(iter)
+    else:
+        iter+=1
+        print(iter)
     grid,rocks_queue,jet_stream_queue,jet_rotation = drop_rock(grid,rocks_queue,jet_stream_queue,jet_rotation)
 
+stack_height = 0
+for row in grid:
+    if '#' in row:
+        stack_height +=1
 
+print(extra_stack_height+stack_height)

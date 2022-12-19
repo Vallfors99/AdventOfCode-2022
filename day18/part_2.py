@@ -22,68 +22,8 @@ def get_cube_neighbors(cube,other_cubes):
             neighbors.append(tuple(neighbor))
     return neighbors
 
+
 def count_external_surfaces(external_air_cubes,cubes):
-    '''count how many external surfaces the cube structure has'''
-    visible_surfaces = []
-    for air_cube in external_air_cubes:
-
-        # check all directions
-        visible_surfaces_air_cube = {"x+":None,"x-":None,"y+":None,"y-":None,"z+":None,"z-":None} 
-        air_cube_xy = (air_cube[0],air_cube[1])
-        air_cube_xz = (air_cube[0],air_cube[2])
-        air_cube_yz = (air_cube[1],air_cube[2])
-
-        for cube in cubes:
-            if (cube[0],cube[1]) == air_cube_xy:
-                if cube[2] > air_cube[2]: # above    
-                    if visible_surfaces_air_cube["z+"] == None:
-                        visible_surfaces_air_cube["z+"] = (cube,0)
-
-                    elif abs(cube[2]-air_cube[2]) < abs(visible_surfaces_air_cube["z+"][0][2]-air_cube[2]):
-                        # if new cube is closer, it is now the cube that the air cube can see
-                        visible_surfaces_air_cube["z+"] = (cube,0)
-
-                if cube[2] < air_cube[2]: # below
-                    if visible_surfaces_air_cube["z-"] == None:
-                        visible_surfaces_air_cube["z-"] = (cube,1)
-
-                    elif abs(cube[2]-air_cube[2]) < abs(visible_surfaces_air_cube["z-"][0][2]-air_cube[2]):
-                        # if new cube is closer, it is now the cube that the air cube can see
-                        visible_surfaces_air_cube["z-"] = (cube,1)
-
-            elif (cube[0],cube[2]) == air_cube_xz:
-                if cube[1] > air_cube[1]:    
-                    if visible_surfaces_air_cube['y+'] == None:
-                        visible_surfaces_air_cube['y+'] = (cube,2)
-                    elif abs(cube[1]-air_cube[1]) < abs(visible_surfaces_air_cube['y+'][0][1]-air_cube[1]):
-                        visible_surfaces_air_cube['y+'] = (cube,2)
-                elif cube[1] < air_cube[1]:
-                    if visible_surfaces_air_cube['y-'] == None:
-                        visible_surfaces_air_cube['y-'] = (cube,3)
-                    elif abs(cube[1]-air_cube[1]) < abs(visible_surfaces_air_cube['y-'][0][1]-air_cube[1]):
-                        visible_surfaces_air_cube['y-'] = (cube,3)
-
-            elif (cube[1],cube[2]) == air_cube_yz:    
-                if cube[0] > air_cube[0]:
-                    if visible_surfaces_air_cube['x+'] == None:
-                        visible_surfaces_air_cube['x+'] = (cube,4) 
-                    elif abs(cube[0]-air_cube[0]) < abs(visible_surfaces_air_cube['x+'][0][0]-air_cube[0]):
-                        visible_surfaces_air_cube['x+'] = (cube,4) 
-                elif cube[0] < air_cube[0]:
-                    if visible_surfaces_air_cube['x-'] == None:
-                        visible_surfaces_air_cube['x-'] = (cube,5)
-                    elif abs(cube[0]-air_cube[0]) < abs(visible_surfaces_air_cube['x-'][0][0]-air_cube[0]): 
-                        visible_surfaces_air_cube['x-'] = (cube,5)
-
-        visible_surfaces_air_cube = [elem for elem in visible_surfaces_air_cube.values() if elem != None]
-        for elem in visible_surfaces_air_cube:
-            visible_surfaces.append(elem)
-    # print result
-    print(len(set(visible_surfaces)))
-
-
-
-def count_external_surfaces_2(external_air_cubes,cubes):
     '''count how many external surfaces the cube structure has'''
     n_external_surfaces = 0
     for cube in cubes:
@@ -108,13 +48,14 @@ def get_all_air_cubes_in_cube_space(cubes):
 def find_all_connected_cubes(start_cube,all_cubes):
     '''
     Takes a start_cube and a list containing all_cubes in the cube space.
-    Returns a list of all cubes that are connected to the start_cube
+    Returns a dict of all cubes that are connected to the start_cube
     either directly or indirectly through other cubes in all_cubes
     '''
     neighbors = {start_cube: True}
     new_neighbors_this_iteration = [start_cube]
 
     while True:
+        print(len(new_neighbors_this_iteration))
         new_neighbors_previous_iteration = new_neighbors_this_iteration
         new_neighbors_this_iteration = []
 
@@ -131,8 +72,7 @@ def find_all_connected_cubes(start_cube,all_cubes):
             for new_neighbor in new_neighbors_this_iteration:
                 neighbors[new_neighbor] = True
 
-    connected_cubes = list(neighbors.keys())
-    return connected_cubes
+    return neighbors
 
 def main():
     # input parsing
@@ -148,9 +88,11 @@ def main():
     edge__air_cube = (min_x-1,min_y-1,min_z-1)
 
     # find all connected air cubes to this air cube
+    air_cubes = {air_cube: True for air_cube in air_cubes}
     external_air_cubes = find_all_connected_cubes(edge__air_cube,air_cubes)
     
     # count the number of external surfaces
-    n_external_surfaces = count_external_surfaces_2(external_air_cubes,cubes)
+    n_external_surfaces = count_external_surfaces(external_air_cubes,cubes)
+    
     print(n_external_surfaces)
 cProfile.run('main()',sort='cumtime')

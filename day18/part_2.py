@@ -3,10 +3,18 @@ input_file = 'day18\input.txt'
 with open(input_file) as infile:
     cubes = [[int(elem) for elem in line.strip().split(',')] for line in infile]
     cubes = [(c[0],c[1],c[2]) for c in cubes]
-print(cubes)
 
 area_count = 0
 
+# build cubes for test
+cubes = []
+for x in range(1,5,1):
+    for y in range(1,5,1):
+        for z in range(1,5,1):
+            if (x,y,z) not in cubes:
+                cubes.append((x,y,z))
+cubes.remove((1,1,1))
+print(cubes)
 # make big cube
 # iterate over all air cubes
 # if air cube can see one or more surfaces but not 6 surfaces, then all of those surfaces are external
@@ -26,6 +34,7 @@ for x in range(min_x-1,max_x+2,1):
         for z in range(min_z-1,max_z+2,1):
             if (x,y,z) not in cubes:
                 air_cubes.append((x,y,z))
+
 
 # count visible surfaces
 visible_surfaces = []
@@ -78,9 +87,9 @@ for air_cube in air_cubes:
                     visible_surfaces_air_cube['x+'] = (cube,5) 
             elif cube[0] < air_cube[0]:
                 if visible_surfaces_air_cube['x-'] == None:
-                    visible_surfaces_air_cube['x-'] = (cube,5)
+                    visible_surfaces_air_cube['x-'] = (cube,6)
                 elif abs(cube[0]-air_cube[0]) < abs(visible_surfaces_air_cube['x-'][0][0]-air_cube[0]): 
-                    visible_surfaces_air_cube['x-'] = (cube,5)
+                    visible_surfaces_air_cube['x-'] = (cube,6)
 
     visible_surfaces_air_cube = [elem for elem in visible_surfaces_air_cube.values() if elem != None]
     if len(visible_surfaces_air_cube) < 6:

@@ -37,12 +37,17 @@ def get_all_air_cubes_in_cube_space(cubes):
     Returns a dict containing positions (x,y,z) for all the air cubes present inside 
     or around the cube structure
     '''
-    max_x = max([elem[0] for elem in cubes])
-    min_x = min([elem[0] for elem in cubes])
-    max_y = max([elem[1] for elem in cubes])
-    min_y = min([elem[1] for elem in cubes])
-    max_z = max([elem[2] for elem in cubes])
-    min_z = min([elem[2] for elem in cubes])
+    x_vals = [elem[0] for elem in cubes]
+    max_x = max(x_vals)
+    min_x = min(x_vals)
+
+    y_vals = [elem[1] for elem in cubes]
+    max_y = max(y_vals)
+    min_y = min(y_vals)
+
+    z_vals = [elem[2] for elem in cubes]
+    max_z = max(z_vals)
+    min_z = min(z_vals)
     
     air_cubes = {}
     for x in range(min_x-1,max_x+2,1):
@@ -66,8 +71,8 @@ def find_all_connected_cubes(start_cube,all_cubes):
         new_neighbors_this_iteration = dict()
 
         for neighbor in new_neighbors_previous_iteration:
-            new_neighbors_this_neighbor = get_cube_neighbors(neighbor,all_cubes)
-            for new_neighbor in new_neighbors_this_neighbor:
+            new_neighbors = get_cube_neighbors(neighbor,all_cubes)
+            for new_neighbor in new_neighbors:
                 if not new_neighbor in neighbors and new_neighbor not in new_neighbors_this_iteration:
                     new_neighbors_this_iteration[new_neighbor] = True
         
@@ -76,7 +81,6 @@ def find_all_connected_cubes(start_cube,all_cubes):
         else:
             for new_neighbor in new_neighbors_this_iteration:
                 neighbors[new_neighbor] = True
-
     return neighbors
 
 

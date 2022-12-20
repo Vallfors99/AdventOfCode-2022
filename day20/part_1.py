@@ -24,16 +24,16 @@ for element_data in elements_original_order:
     for elem,pos in element_positions.items():
         if old_position < pos:
             if new_position >= pos:
-                new_element_positions[elem] = pos-1
+                new_element_positions[elem] = (pos-1) % (max_pos+1)
             elif new_position < pos:
                 new_element_positions[elem] = pos
         elif old_position > pos:
             if new_position > pos:
                 new_element_positions[elem] = pos
             elif new_position < pos:
-                new_element_positions[elem] = pos+1
+                new_element_positions[elem] = (pos+1) % (max_pos+1)
             else:
-                new_element_positions[elem] = pos-1
+                new_element_positions[elem] = (pos-1) % (max_pos+1)
         else:
             new_element_positions[elem] = new_position
 

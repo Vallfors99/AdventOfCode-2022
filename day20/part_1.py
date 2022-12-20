@@ -46,13 +46,14 @@ for element_data in elements_original_order:
         
         elif other_element_pos == new_position:
             if shift_value > 0:
-                new_element_positions[other_element] = (new_element_positions[other_element]) % (max_pos+1)
+                new_element_positions[other_element] = (new_position-1) % (max_pos+1)
+                new_element_positions[element_data] = new_position
             else:
-                new_element_positions[other_element] = (new_element_positions[other_element]+1) % (max_pos+1)
+                new_element_positions[other_element] = (new_position) % (max_pos+1)
+                new_element_positions[element_data] = (new_position-1) % (max_pos+1)
 
     for e in new_element_positions:
         element_positions[e] = new_element_positions[e]
-    element_positions[element_data] = new_position
 
     elements_sorted = [e[1] for e in {k: v for k, v in sorted(element_positions.items(), key=lambda item: item[1])}.keys()]
     print(elements_sorted)

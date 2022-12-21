@@ -30,7 +30,7 @@ for n in range(3876907167490,3876907167500,1):
 
     # after each try, check if root is true, otherwise clear variables and restart
     exec(root_line)
-    print(f'root: {plmp} + {rmtt},delta = {plmp - rmtt} n: {n}')
+    print(f'root: {plmp} == {rmtt},delta = {plmp - rmtt} n: {n}')
     if root == True:
         print(f'humn: {n}')
         break

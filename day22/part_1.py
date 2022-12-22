@@ -1,6 +1,6 @@
 from itertools import groupby
 from string import ascii_uppercase
-import regex
+import copy
 def create_chunks_by_separator(list_of_lines,sep=''):
     '''
     create chunks from a list of lines by separator
@@ -24,6 +24,9 @@ def carry_out_instruction(current_dir,current_pos,grid,instruction,dir_vectors,g
     '''carry out instruction'''
     if instruction in uppers: # rotate only
         current_dir = change_dir(current_dir,instruction)
+        # update grid for print
+        dirs_symbols = ['>','v','<','^']
+        grid_for_print[current_pos[0]-1][current_pos[1]-1] = dirs_symbols[current_dir]
         return current_dir,current_pos
 
     n_steps = instruction
@@ -42,9 +45,12 @@ def carry_out_instruction(current_dir,current_pos,grid,instruction,dir_vectors,g
         # move to new position if possible, otherwise break
         if grid[new_pos] == True:
             current_pos = new_pos
+
+            # update grid for print
+            dirs_symbols = ['>','v','<','^']
+            grid_for_print[current_pos[0]-1][current_pos[1]-1] = dirs_symbols[current_dir]
         else:
             break
-
     return current_dir,current_pos
 
 # input parsing
@@ -67,6 +73,11 @@ for l in instructions[0]:
         current_elem = l
         instruction_list.append(current_elem)
         current_elem = ''
+if current_elem != '':
+    if current_elem not in uppers:
+        instruction_list.append(int(current_elem))
+    else:
+        instruction_list.append(current_elem)
 
 # build grid
 grid = {}
@@ -79,6 +90,7 @@ for row_idx,line in enumerate(map):
             grid[(row_idx+1,col_idx+1)] = False
 
 grid_start_stop = {"row":{},"col":{}}
+grid_for_print = copy.deepcopy(map)
 for row,col in grid:
     if row in grid_start_stop["row"]:
         if col < grid_start_stop["row"][row]["start"]:
@@ -93,7 +105,7 @@ for row,col in grid:
     if col in grid_start_stop["col"]:
         if row < grid_start_stop["col"][col]["start"]:
             grid_start_stop["col"][col]["start"] = row
-        elif row > grid_start_stop["row"][row]["stop"]:
+        elif row > grid_start_stop["col"][col]["stop"]:
             grid_start_stop["col"][col]["stop"] = row
     else:
         grid_start_stop["col"][col] = {}
@@ -102,12 +114,15 @@ for row,col in grid:
 # define intial values for position and direction
 current_dir = 0
 current_pos = (1,map[0].index('.') + 1)
-
+dirs_symbols = ['>','v','<','^']
+grid_for_print[current_pos[0]-1][current_pos[1]-1] = dirs_symbols[current_dir]
 #define dir vectors
 dir_vectors = {0:(0,1),1:(1,0),2:(0,-1),3:(-1,0)}
+
 
 # carry out each instruction
 for instruction in instruction_list:
     current_dir,current_pos = carry_out_instruction(current_dir,current_pos,grid,instruction,dir_vectors,grid_start_stop)
-print(f'row: {current_pos[0]}, col: {current_pos[1]}, dir: {current_dir}')
 print(current_pos[0]*1000 + current_pos[1]*4 + current_dir)
+# for line in grid_for_print:
+#     print("".join(line))
